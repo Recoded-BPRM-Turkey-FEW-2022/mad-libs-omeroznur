@@ -84,13 +84,136 @@
     return arrOfObj;
   }
   
-  /**
-   * All your other JavaScript code goes here, inside the function. Don't worry about
-   * the `then` and `async` syntax for now.
-   * 
-   * You'll want to use the results of parseStory() to display the story on the page.
-   */
-  getRawStory().then(parseStory).then((processedStory) => {
-    console.log(processedStory);
-  });
+   getRawStory()
+   .then(parseStory)
+   .then((processedStory) => {
+     madLibsEdit(processedStory);
+     madLibsPreview()
+     hotKey()
+   });
+ 
+ function madLibsEdit(story) {
+   // CREATE THE DOM ELEMENTS WHERE THE EDIT AND PREVIEW PARAGRAPHS WILL BE
+   const editDiv = document.querySelector(".madLibsEdit");
+   const paragraph = document.createElement("p");
+   const previewDiv = document.querySelector(".madLibsPreview");
+   const preParagraph = document.createElement("p");
+ 
+   editDiv.appendChild(paragraph);
+   previewDiv.appendChild(preParagraph);
+ 
+   // CREATE A COUNTER THAT WILL ASSIGN AN id FOR EACH INPUT AND PREVIEW FIELD
+   let inputCounter = 0;
+   let spanCounter = 0;
+   
+  // LOOP OVER EACH OBJECT IN THE ARRAY AND DO THE FOLLOWING
+   story.forEach((e) => {
+  // IF THE OBJECT INCLUDES THE noun PART OF SPEECH...
+     if (e.pos === "noun") {
+  // CREATE AN INPUT FIELD
+       let input = document.createElement("input");
+  // GIVE IT AN id BASED ON ITS ORDER; AND THE OTHER STUFF
+       input.setAttribute("id", "input" + inputCounter);
+       input.setAttribute("class", "input");
+       input.setAttribute("placeholder", "noun");
+       input.setAttribute("maxlength", "20");
+  // INCREASE THE COUNTER
+       inputCounter++;
+  // ADD THE FIELD TO THE paragraph ELEMENT
+       paragraph.appendChild(input);
+ 
+  // CREATE A span ELEMENT
+       const span = document.createElement("span");
+  // GIVE IT AN id BASED ON ITS ORDER
+       span.setAttribute("id", "span" + spanCounter);
+  // GIVE 5 underscores AS ITS (INITIAL) VALUE
+       span.innerHTML = "_____";
+  // INCREASE THE COUNTER
+       spanCounter++;
+  // ADD THE SPAN TO THE PREVIEW PARAGRAPH
+       preParagraph.appendChild(span);
+ 
+     } else if (e.pos === "verb") {
+       let input = document.createElement("input");
+       input.setAttribute("type", "text");
+       input.setAttribute("id", "input" + inputCounter);
+       input.setAttribute("class", "input");
+       input.setAttribute("placeholder", "verb");
+       input.setAttribute("maxlength", "20");
+       inputCounter++;
+       paragraph.appendChild(input);
+ 
+       const span = document.createElement("span");
+       span.setAttribute("id", "span" + spanCounter);
+       span.innerHTML = "_____";
+       spanCounter++;
+       preParagraph.appendChild(span);
+ 
+     } else if (e.pos === "adjective") {
+       let input = document.createElement("input");
+       input.setAttribute("type", "text");
+       input.setAttribute("id", "input" + inputCounter);
+       input.setAttribute("class", "input");
+       input.setAttribute("placeholder", "adjective");
+       input.setAttribute("maxlength", "20");
+       inputCounter++;
+       paragraph.appendChild(input);
+ 
+       const span = document.createElement("span");
+       span.setAttribute("id", "span" + spanCounter);
+       span.innerHTML = "_____";
+       spanCounter++;
+       preParagraph.appendChild(span);
+ 
+  // IF THE OBJECT IS NOT POS...
+     } else {
+  // CREATE SPAN AREAS FOR EACH NORMAL (no POS) WORD AND ADD THEM TO THE EDIT AND PREVIEW PARAGRAPHS
+       let normalWordEdit = document.createElement("span");
+       let normalWordPreview = document.createElement("span");
+       normalWordEdit.innerText = e.word + " ";
+       normalWordPreview.innerText = e.word + ' ';
+       paragraph.appendChild(normalWordEdit)
+       preParagraph.appendChild(normalWordPreview);
+     }
+   }
+ )}
+ 
+  // THIS IS THE FUNCTION THAT TAKES THE USER INPUT FROM EACH INPUT FIELD AND ADDS IT TO ITS CORRESPONDING SPAN FIELD IN THE PREIVEW PARAGRAPH
+ function madLibsPreview() {
+   const inputLength = document.querySelectorAll("input").length
+  // ITERATE OVER EACH INPUT FIELD AND...
+   for (let i = 0; i < inputLength; i++) {
+     const input = document.querySelector(`#input${i}`);
+  // IF YOU FIND ANY USER INPUT...
+     input.addEventListener("input", () => {
+  // TAKE THAT INPUT DATA AND STORE IT
+       localStorage.setItem(input.id, input.value)
+       
+       const span = document.querySelector(`#span${i}`);
   
+  // USE THE id PART OF THE DATA TO FIND OUT WHERE TO SHOW THE USER'S TEXT INPUT IN THE PREVIEW AREA
+       if (input.value){
+         span.innerHTML = " " + input.value + " ";
+  // IF YOU FIND NO INPUT IN AN INPUT FIELD, ITS CORRESPONDING SPAN AREA SHOULD REMAIN THE SAME
+       } else {
+         span.innerHTML = "_____";
+       }
+     })
+   }
+ }
+ 
+ function hotKey() {
+   let allInput = document.querySelectorAll(".input");
+   for (let i = 0; i < allInput.length; i++) {
+     allInput[i].addEventListener("keydown", function (event) {
+       if (event.keyCode === 13) {
+         event.preventDefault();
+         if (allInput[i + 1]) {
+           allInput[i + 1].focus();
+         } else if (i === allInput.length - 1) {
+           document.querySelector(`#input0`).focus();
+         }
+       }
+     });
+   }
+ }
