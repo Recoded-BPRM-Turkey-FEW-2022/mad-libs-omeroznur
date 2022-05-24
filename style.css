@@ -1,3 +1,55 @@
-/**
- * Your CSS goes here.
- */
+body {
+    background-image: url(./background.png);
+    background-size: 100%;
+    background-repeat: repeat;
+    color: #FFE81F;
+    font-size: 30px;
+    font-family: 'Libre Franklin', sans-serif;
+}
+
+#flex {
+    display: flex;
+    border: 1px;
+    justify-content: space-around;
+    align-items: center;
+    border: 9px solid #FFE81F;
+    /* border-radius: 10px; */
+    margin: 20px;
+}
+
+#header {
+    display: flex;
+    justify-content: space-around;
+}
+
+.madLibsEdit {
+    max-width: 600px;
+}
+
+.madLibsPreview {
+    max-width: 600px;
+}
+
+input {
+    /* width */
+    margin-left: 7px;
+    margin-right: 7px;
+    border: 2px solid #FFE81F;
+    border-radius: 4px;
+    opacity: 0.2;
+    height: 22px;
+    font-family: 'Libre Franklin', sans-serif;
+    font-size: 20px;
+    width: 25%;
+}
+
+input[type=text]:focus {
+    background-color: #FFE81F;
+  }
+
+@media screen and (max-width: 700px) {
+    #flex {
+        flex-direction: column;
+        padding: 20px;
+    }
+}
